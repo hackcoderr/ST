@@ -82,3 +82,36 @@ else
 fi
 
 ```
+
+
+
+#!/bin/bash
+
+# Jenkins server information
+jenkins_url="http://your-jenkins-server-url"
+jenkins_username="your-username"
+jenkins_password="your-password"
+
+# Job name
+job_name="first_pipeline"
+
+# Jenkins API URL to get the console output of the latest build
+console_output_url="${jenkins_url}/job/${job_name}/lastBuild/consoleText"
+
+# Function to fetch data from Jenkins API with authentication
+fetch_data() {
+    local url="$1"
+    curl -s --user "${jenkins_username}:${jenkins_password}" "$url"
+}
+
+# Get the console output of the latest build
+console_output=$(fetch_data "$console_output_url")
+
+if echo "$console_output" | grep -q "skipped=true"; then
+    # Print the lines containing "skipped=true"
+    skipped_lines=$(echo "$console_output" | grep "skipped=true")
+    echo "Found 'skipped=true' in console output:"
+    echo "$skipped_lines"
+else
+    echo "No 'skipped=true' found in console output."
+fi
