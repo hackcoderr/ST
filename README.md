@@ -84,6 +84,7 @@ fi
 ```
 
 
+```
 
 #!/bin/bash
 
@@ -115,3 +116,4 @@ if echo "$console_output" | grep -q "skipped=true"; then
 else
     echo "No 'skipped=true' found in console output."
 fi
+```
