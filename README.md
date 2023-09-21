@@ -1,4 +1,4 @@
-9```
+```
 import jenkins
 import sys
 
@@ -29,10 +29,7 @@ try:
         print("No 'skipped=true' found in console output.")
 except jenkins.JenkinsException as e:
     print(f"Error: {str(e)}")
-    sys.exit(1)
-
-
-43.205.201.149
+   
 ```
 
 ```
@@ -116,5 +113,10 @@ if echo "$console_output" | grep -q "skipped=true"; then
 else
     echo "No 'skipped=true' found in console output."
 fi
-```
+
 grep -B1 'skipped' test.txt | sed -n '/\[[0-9]\+\]/s/.*\(\[[0-9]\+\]\).*/\1/p'
+```
+
+```
+grep -C1 "skipped" test.txt | grep -oE 'GET .*\[([0-9]+)\]' | sed 's/GET //;s/\[//;s/\]//' | awk '{print $2}'
+```
