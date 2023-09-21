@@ -1,4 +1,4 @@
-```
+9```
 import jenkins
 import sys
 
@@ -117,3 +117,4 @@ else
     echo "No 'skipped=true' found in console output."
 fi
 ```
+grep -B1 'skipped' test.txt | sed -n '/\[[0-9]\+\]/s/.*\(\[[0-9]\+\]\).*/\1/p'
