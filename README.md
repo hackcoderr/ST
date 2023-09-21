@@ -118,5 +118,44 @@ grep -B1 'skipped' test.txt | sed -n '/\[[0-9]\+\]/s/.*\(\[[0-9]\+\]\).*/\1/p'
 ```
 
 ```
-grep -C1 "skipped" test.txt | grep -oE 'GET .*\[([0-9]+)\]' | sed 's/GET //;s/\[//;s/\]//' | awk '{print $2}'
+
+To save the lines containing "skipped" in a CSV file named `st_audit_file.csv`, you can modify the script like this:
+
+```bash
+#!/bin/bash
+
+# Jenkins server information
+jenkins_url="http://your-jenkins-server-url"
+jenkins_username="your-username"
+jenkins_password="your-password"
+
+# Job name
+job_name="first_pipeline"
+
+# Jenkins API URL to get the console output of the latest build
+console_output_url="${jenkins_url}/job/${job_name}/lastBuild/consoleText"
+
+# Function to fetch data from Jenkins API with authentication
+fetch_data() {
+    local url="$1"
+    curl -s --user "${jenkins_username}:${jenkins_password}" "$url"
+}
+
+# Get the console output of the latest build
+console_output=$(fetch_data "$console_output_url")
+
+# Extract lines containing "skipped" and save them to a CSV file
+if echo "$console_output" | grep -q "skipped"; then
+    # Print the lines containing "skipped" (optional)
+    skipped_lines=$(echo "$console_output" | grep "skipped")
+
+    # Save the lines to a CSV file
+    echo "$skipped_lines" > st_audit_file.csv
+    echo "Found 'skipped' in console output. Saved to st_audit_file.csv."
+else
+    echo "No 'skipped' found in console output."
+fi
+```
+
+This script will extract the lines containing "skipped" from the console output, save them to a CSV file called `st_audit_file.csv`, and print a message indicating that the data has been saved to the file.
 ```
