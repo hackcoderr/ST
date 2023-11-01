@@ -1,160 +1,41 @@
 ```
-import jenkins
-import sys
-
-# Jenkins server information
-jenkins_url = 'http://your-jenkins-server-url'
-jenkins_username = 'your-username'
-jenkins_password = 'your-password'
-
-# Job name
-job_name = 'first_pipeline'
-
-# Connect to Jenkins
-server = jenkins.Jenkins(jenkins_url, username=jenkins_username, password=jenkins_password)
-
-# Get the latest build number of the first_pipeline job
-latest_build = server.get_job_info(job_name)['lastBuild']['number']
-
-# Get the console output of the latest build
-try:
-    console_output = server.get_build_console_output(job_name, latest_build)
-    if "skipped=true" in console_output:
-        # Print the lines containing "skipped=true"
-        lines = console_output.split('\n')
-        skipped_lines = [line for line in lines if "skipped=true" in line]
-        for line in skipped_lines:
-            print(line)
-    else:
-        print("No 'skipped=true' found in console output.")
-except jenkins.JenkinsException as e:
-    print(f"Error: {str(e)}")
-   
-```
-
-```
 #!/bin/bash
 
-# Jenkins server information
-jenkins_url="http://your-jenkins-server-url"
-jenkins_username="your-username"
-jenkins_password="your-password"
+workspace="/var/lib/jenkins/workspace/Invo_ST"
+resources_dir="$workspace/resources/sachin/prod/us"
+skip_tests_dir="$workspace/skip_tests"
+count_dir="$workspace/count"
+csv_dir="$workspace/csv"
 
-# Job name
-job_name="first_pipeline"
+# Create necessary directories
+mkdir -p "$skip_tests_dir"
+mkdir -p "$csv_dir"
+mkdir -p "$count_dir"
 
-# Jenkins API URL to get the latest build info
-build_info_url="${jenkins_url}/job/${job_name}/lastBuild/api/json"
+for value in "$resources_dir"/*; do
+  total_length=0
+  count_file="$count_dir/$(basename "$value")_count"
 
-# Jenkins API URL to get the console output of the latest build
-console_output_url="${jenkins_url}/job/${job_name}/lastBuild/consoleText"
-
-# Function to fetch data from Jenkins API with authentication
-fetch_data() {
-    local url="$1"
-    curl -s --user "${jenkins_username}:${jenkins_password}" "$url"
-}
-
-# Get the latest build info
-build_info=$(fetch_data "$build_info_url")
-
-if [ -n "$build_info" ]; then
-    # Get the build number of the latest build
-    latest_build_number=$(echo "$build_info" | jq -r '.number')
-
-    # Get the console output of the latest build
-    console_output=$(fetch_data "$console_output_url")
-
-    if echo "$console_output" | grep -q "skipped=true"; then
-        # Print the lines containing "skipped=true"
-        skipped_lines=$(echo "$console_output" | grep "skipped=true")
-        echo "Found 'skipped=true' in console output:"
-        echo "$skipped_lines"
-    else
-        echo "No 'skipped=true' found in console output."
+  for file in "$value"/data/*.json; do
+    len=$(jq length "$file")
+    total_length=$((total_length + len))
+    
+    if jq -e '.skipTestCase == "true"' "$file" >/dev/null; then
+      jq '[select(.skipTestCase == "true")]' "$file" >> "$skip_tests_dir/$(basename "$value")_skip.json"
     fi
-else
-    echo "Failed to fetch build info."
-    exit 1
-fi
+  done
 
-```
+  echo "$total_length" > "$count_file"
+done
 
+for json_value in "$skip_tests_dir"/*; do
+  csv_file="$json_value.csv"
+  header="ClientID,AppID,SkipTestCase,Expected,Response,Endpoint"
 
-```
+  jq -r '[.clientId, .appId, .skipTestCase, .statusCode, .url] | @csv' "$json_value" > "$csv_file"
+  sed -i "1s;^;$header\n;" "$csv_file"
+done
 
-#!/bin/bash
-
-# Jenkins server information
-jenkins_url="http://your-jenkins-server-url"
-jenkins_username="your-username"
-jenkins_password="your-password"
-
-# Job name
-job_name="first_pipeline"
-
-# Jenkins API URL to get the console output of the latest build
-console_output_url="${jenkins_url}/job/${job_name}/lastBuild/consoleText"
-
-# Function to fetch data from Jenkins API with authentication
-fetch_data() {
-    local url="$1"
-    curl -s --user "${jenkins_username}:${jenkins_password}" "$url"
-}
-
-# Get the console output of the latest build
-console_output=$(fetch_data "$console_output_url")
-
-if echo "$console_output" | grep -q "skipped=true"; then
-    # Print the lines containing "skipped=true"
-    skipped_lines=$(echo "$console_output" | grep "skipped=true")
-    echo "Found 'skipped=true' in console output:"
-    echo "$skipped_lines"
-else
-    echo "No 'skipped=true' found in console output."
-fi
-
-grep -B1 'skipped' test.txt | sed -n '/\[[0-9]\+\]/s/.*\(\[[0-9]\+\]\).*/\1/p'
-```
-
-```
-
-To save the lines containing "skipped" in a CSV file named `st_audit_file.csv`, you can modify the script like this:
-
-```bash
-#!/bin/bash
-
-# Jenkins server information
-jenkins_url="http://your-jenkins-server-url"
-jenkins_username="your-username"
-jenkins_password="your-password"
-
-# Job name
-job_name="first_pipeline"
-
-# Jenkins API URL to get the console output of the latest build
-console_output_url="${jenkins_url}/job/${job_name}/lastBuild/consoleText"
-
-# Function to fetch data from Jenkins API with authentication
-fetch_data() {
-    local url="$1"
-    curl -s --user "${jenkins_username}:${jenkins_password}" "$url"
-}
-
-# Get the console output of the latest build
-console_output=$(fetch_data "$console_output_url")
-
-# Extract lines containing "skipped" and save them to a CSV file
-if echo "$console_output" | grep -q "skipped"; then
-    # Print the lines containing "skipped" (optional)
-    skipped_lines=$(echo "$console_output" | grep "skipped")
-
-    # Save the lines to a CSV file
-    echo "$skipped_lines" > st_audit_file.csv
-    echo "Found 'skipped' in console output. Saved to st_audit_file.csv."
-else
-    echo "No 'skipped' found in console output."
-fi
 ```
 
 This script will extract the lines containing "skipped" from the console output, save them to a CSV file called `st_audit_file.csv`, and print a message indicating that the data has been saved to the file.
