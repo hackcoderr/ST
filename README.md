@@ -1,7 +1,9 @@
 
-'''
-kubectl get nodes -o=jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.status.conditions[?(@.type=="Ready")].status}{"\n"}' | awk '{if ($2=="True") {ready++} else {not_ready++}} END {print "Ready:", ready, "\nNot Ready:", not_ready}'
-'''
+```
+
+kubectl get nodes -o=jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.spec.unschedulable}{"\t"}{.status.conditions[?(@.type=="Ready")].status}{"\n"}' | awk '{if ($2=="true" && $3=="True") {cordoned++} else if ($3=="True") {not_ready++} else if ($3=="false" && $4=="True") {ready++}} END {print "Ready:", ready, "\nNot Ready:", not_ready, "\nCordoned:", cordoned}'
+
+```
 
 ```
 #!/bin/bash
