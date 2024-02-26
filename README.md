@@ -1,8 +1,9 @@
+echo -e "\033[0;34mReady node: $(kubectl get nodes | grep -c ' Ready ')\033[0m"
+echo -e "\033[0;34mNot ready node: $(kubectl get nodes | grep -c ' NotReady ')\033[0m"
+echo -e "\033[0;34mCordon node: $(kubectl get nodes | grep -c 'schedulingDisabled')\033[0m"
 
 ```
 
-
-kubectl get nodes -o=jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.spec.unschedulable}{"\t"}{.status.conditions[?(@.type=="Ready")].status}{"\n"}' | awk '{if ($2=="true" && $3=="True") {cordoned++} else if ($3=="True") {not_ready++} else if ($3=="false" && $4=="True") {ready++}} END {print "Ready:", ready, "\nNot Ready:", not_ready, "\nCordoned:", cordoned}'
 ```
 
 ```
