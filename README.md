@@ -1,3 +1,4 @@
+```
 echo -e "\033[0;34mReady node: $(kubectl get nodes | grep -c ' Ready ')\033[0m"
 echo -e "\033[0;34mNot ready node: $(kubectl get nodes | grep -c ' NotReady ')\033[0m"
 echo -e "\033[0;34mCordon node: $(kubectl get nodes | grep -c 'schedulingDisabled')\033[0m"
