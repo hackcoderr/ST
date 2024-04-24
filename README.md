@@ -1,4 +1,4 @@
-```
+8```
 echo -e "\033[0;34mReady node: $(kubectl get nodes | grep -c ' Ready ')\033[0m"
 echo -e "\033[0;34mNot ready node: $(kubectl get nodes | grep -c ' NotReady ')\033[0m"
 echo -e "\033[0;34mCordon node: $(kubectl get nodes | grep -c 'schedulingDisabled')\033[0m"
@@ -48,4 +48,55 @@ done
 ```
 
 This script will extract the lines containing "skipped" from the console output, save them to a CSV file called `st_audit_file.csv`, and print a message indicating that the data has been saved to the file.
+```
+```
+// Google Apps Script code.gs
+
+function updateSheet(validation, yesNo) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var lastRow = sheet.getLastRow() + 1;
+  sheet.getRange(lastRow, 1).setValue(validation);
+  sheet.getRange(lastRow, 2).setValue(yesNo);
+}
+
+function getData() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = sheet.getDataRange().getValues();
+  return data;
+}
+
+```
+```
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Simple Table</title>
+</head>
+<body>
+  <table>
+    <tr>
+      <th>Validation</th>
+      <th>Yes/No</th>
+    </tr>
+    <tr>
+      <td>Some Data</td>
+      <td>
+        <select id="yesNo">
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+        </select>
+      </td>
+    </tr>
+  </table>
+
+  <script>
+    document.getElementById('yesNo').addEventListener('change', function() {
+      var validation = 'Some Data'; // Get validation data
+      var yesNo = this.value;
+      google.script.run.updateSheet(validation, yesNo);
+    });
+  </script>
+</body>
+</html>
 ```
