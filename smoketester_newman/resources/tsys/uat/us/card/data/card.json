@@ -1,0 +1,23 @@
+[
+  {
+    "clientid": "2234",
+    "url": "/card/validate/success/",
+    "statuscode": 200,
+    "authtype": "system",
+    "skipTestCase": "false"
+  },
+  {
+    "clientid": "2235",
+    "url": "/card/validate/expired/",
+    "statuscode": 400,
+    "authtype": "user",
+    "skipTestCase": "true"
+  },
+  {
+    "clientid": "2236",
+    "url": "/card/limit/exceeded/",
+    "statuscode": 403,
+    "authtype": "system",
+    "skipTestCase": "false"
+  }
+]

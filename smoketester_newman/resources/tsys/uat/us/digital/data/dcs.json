@@ -1,0 +1,23 @@
+[
+  {
+    "clientid": "6678",
+    "url": "/digital/offer/apply/",
+    "statuscode": 200,
+    "authtype": "system",
+    "skipTestCase": "false"
+  },
+  {
+    "clientid": "6679",
+    "url": "/digital/offer/remove/",
+    "statuscode": 404,
+    "authtype": "user",
+    "skipTestCase": "true"
+  },
+  {
+    "clientid": "6680",
+    "url": "/digital/cashback/claim/",
+    "statuscode": 200,
+    "authtype": "system",
+    "skipTestCase": "true"
+  }
+]

@@ -1,0 +1,3 @@
+clientId,skipTestCase,statuscode,url
+"2234","false",200,"/card/validate/success/"
+"2236","false",403,"/card/limit/exceeded/"

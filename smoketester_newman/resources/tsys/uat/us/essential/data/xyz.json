@@ -1,0 +1,23 @@
+[
+  {
+    "clientid": "7812",
+    "url": "/essential/shopping/cart/",
+    "statuscode": 200,
+    "authtype": "system",
+    "skipTestCase": "false"
+  },
+  {
+    "clientid": "7813",
+    "url": "/essential/shopping/checkout/",
+    "statuscode": 500,
+    "authtype": "user",
+    "skipTestCase": "true"
+  },
+  {
+    "clientid": "7814",
+    "url": "/essential/shopping/payment/",
+    "statuscode": 200,
+    "authtype": "system",
+    "skipTestCase": "false"
+  }
+]

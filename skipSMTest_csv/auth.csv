@@ -1,0 +1,3 @@
+clientId,skipTestCase,statuscode,url
+"5678","false",200,"/auth/login/success/"
+"5680","false",200,"/auth/session/refresh/"

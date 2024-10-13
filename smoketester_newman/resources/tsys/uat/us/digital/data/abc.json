@@ -1,0 +1,23 @@
+[
+  {
+    "clientid": "3456",
+    "url": "/digital/wallet/activate/",
+    "statuscode": 200,
+    "authtype": "system",
+    "skipTestCase": "true"
+  },
+  {
+    "clientid": "3457",
+    "url": "/digital/payment/failure/",
+    "statuscode": 400,
+    "authtype": "user",
+    "skipTestCase": "false"
+  },
+  {
+    "clientid": "3458",
+    "url": "/digital/wallet/recharge/",
+    "statuscode": 200,
+    "authtype": "system",
+    "skipTestCase": "true"
+  }
+]

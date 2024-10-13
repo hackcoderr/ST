@@ -1,0 +1,23 @@
+[
+  {
+    "clientid": "8912",
+    "url": "/essential/subscription/start/",
+    "statuscode": 200,
+    "authtype": "system",
+    "skipTestCase": "true"
+  },
+  {
+    "clientid": "8913",
+    "url": "/essential/subscription/cancel/",
+    "statuscode": 404,
+    "authtype": "user",
+    "skipTestCase": "false"
+  },
+  {
+    "clientid": "8914",
+    "url": "/essential/subscription/renew/",
+    "statuscode": 200,
+    "authtype": "system",
+    "skipTestCase": "true"
+  }
+]

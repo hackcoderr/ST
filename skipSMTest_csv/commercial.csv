@@ -1,0 +1,2 @@
+clientId,skipTestCase,statuscode,url
+"9982","false",200,"/commercial/account/close/"

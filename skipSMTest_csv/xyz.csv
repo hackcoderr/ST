@@ -1,0 +1,3 @@
+clientId,skipTestCase,statuscode,url
+"7812","false",200,"/essential/shopping/cart/"
+"7814","false",200,"/essential/shopping/payment/"

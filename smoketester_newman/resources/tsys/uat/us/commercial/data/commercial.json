@@ -1,0 +1,23 @@
+[
+  {
+    "clientid": "9981",
+    "url": "/commercial/account/open/",
+    "statuscode": 200,
+    "authtype": "system",
+    "skipTestCase": "true"
+  },
+  {
+    "clientid": "9982",
+    "url": "/commercial/account/close/",
+    "statuscode": 200,
+    "authtype": "user",
+    "skipTestCase": "false"
+  },
+  {
+    "clientid": "9983",
+    "url": "/commercial/funds/transfer/",
+    "statuscode": 500,
+    "authtype": "system",
+    "skipTestCase": "true"
+  }
+]
