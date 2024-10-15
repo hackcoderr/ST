@@ -103,3 +103,53 @@ function getData() {
 </body>
 </html>
 ```
+
+```
+#!/bin/bash
+
+# Define variables for repeated paths
+RESOURCES_DIR="resources/tsys/uat/us"
+SKIP_TESTS_DIR="./audit/skip_tests"
+CSV_DIR="./audit/SDC_UAT"
+EXCEL_DIR="./audit/excel"
+
+# Deleting the skip tests and csv directories
+rm -rf $SKIP_TESTS_DIR
+rm -rf $CSV_DIR
+
+# Create the directories
+mkdir -p "$SKIP_TESTS_DIR"
+mkdir -p "$CSV_DIR"
+
+# Initialize the final report CSV file with headers
+REPORT_FILE="$CSV_DIR/skip_test_report.csv"
+printf "Application Name, Skipped Test Cases, Total Test Cases\n" > "$REPORT_FILE"
+
+# Loop through each directory in the resources folder
+for value in $(ls "$RESOURCES_DIR"); do
+    total_tests=0
+    skipped_tests=0
+
+    # Loop through each JSON file in the data directory
+    for file in $RESOURCES_DIR/$value/data/*.json; do
+        # Get the length of the JSON file (total test cases)
+        len=$(jq '. | length' "$file")
+        total_tests=$((total_tests + len))
+
+        # Get the application name from the filename (e.g., auth.json -> auth)
+        app_name=$(basename "$file" .json)
+
+        # Check for skipped test cases in the file and store them
+        if jq '.[] | select(.skipTestCase == true)' "$file" > $SKIP_TESTS_DIR/"$value"_"$app_name"_SkipTestCase.json; then
+            skipped=$(jq '. | length' $SKIP_TESTS_DIR/"$value"_"$app_name"_SkipTestCase.json)
+            skipped_tests=$((skipped_tests + skipped))
+        fi
+    done
+
+    # Log results in the report file (Application Name, Skipped Test Cases, Total Test Cases)
+    echo "$app_name, $skipped_tests, $total_tests" >> "$REPORT_FILE"
+done
+
+# Final message
+echo "Smoke Test Audit is Completed and saved in $REPORT_FILE"
+```
